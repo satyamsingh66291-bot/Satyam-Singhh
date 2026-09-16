@@ -11,7 +11,8 @@ import {
   PlusCircle,
   Layers,
   PhoneCall,
-  Search
+  Search,
+  MessageCircle
 } from 'lucide-react';
 
 export default function Navbar({ darkMode, setDarkMode }) {
@@ -54,10 +55,25 @@ export default function Navbar({ darkMode, setDarkMode }) {
               to="/"
               id="nav-link-services"
               className={`text-sm font-semibold transition-colors ${
-                !isAdmin ? 'text-orange-600 dark:text-orange-400' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+                !isAdmin && location.pathname === '/' ? 'text-orange-600 dark:text-orange-400' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
               }`}
             >
               Explore Services
+            </Link>
+            <Link
+              to="/whatsapp"
+              id="nav-link-whatsapp-chat"
+              className={`text-xs font-bold transition-all px-3 py-1.5 rounded-full flex items-center gap-1.5 border shadow-sm ${
+                location.pathname === '/whatsapp' || location.pathname === '/chat'
+                  ? 'bg-emerald-600 text-white border-emerald-600'
+                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
+              }`}
+            >
+              <MessageCircle className="w-3.5 h-3.5 fill-current text-emerald-500 dark:text-emerald-400" />
+              <span>WhatsApp Chat</span>
+              <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-emerald-600 text-white font-mono">
+                7091472879
+              </span>
             </Link>
             <a
               href="/#featured"
@@ -149,6 +165,19 @@ export default function Navbar({ darkMode, setDarkMode }) {
             className="block px-3 py-2 rounded-lg text-base font-medium text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             Explore Services
+          </Link>
+          <Link
+            to="/whatsapp"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center justify-between px-3.5 py-3 rounded-xl text-sm font-bold bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300"
+          >
+            <div className="flex items-center gap-2.5">
+              <MessageCircle className="w-5 h-5 fill-emerald-600 text-emerald-600" />
+              <span>Direct WhatsApp Chat</span>
+            </div>
+            <span className="text-xs bg-emerald-600 text-white px-2.5 py-1 rounded-full font-mono font-bold">
+              7091472879
+            </span>
           </Link>
           <a
             href="/#featured"

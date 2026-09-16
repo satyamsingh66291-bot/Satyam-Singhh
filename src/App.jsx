@@ -4,6 +4,9 @@ import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 import Navbar from './components/Navbar.jsx';
 import Home from './pages/Home.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
+import SatyamSinghBuilder from './pages/SatyamSinghBuilder.jsx';
+import WhatsAppChat from './pages/WhatsAppChat.jsx';
+import WhatsAppFloatingButton from './components/WhatsAppFloatingButton.jsx';
 
 export default function App() {
   // Theme State
@@ -47,16 +50,24 @@ export default function App() {
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<Home showToast={showToast} />} />
+          <Route path="/satyam-singh" element={<SatyamSinghBuilder showToast={showToast} />} />
+          <Route path="/builder" element={<SatyamSinghBuilder showToast={showToast} />} />
+          <Route path="/satyam" element={<SatyamSinghBuilder showToast={showToast} />} />
+          <Route path="/whatsapp" element={<WhatsAppChat showToast={showToast} />} />
+          <Route path="/chat" element={<WhatsAppChat showToast={showToast} />} />
           <Route path="/admin" element={<AdminDashboard showToast={showToast} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
 
+      {/* Floating Persistent WhatsApp Chat Button (7091472879) */}
+      <WhatsAppFloatingButton showToast={showToast} />
+
       {/* Floating Interactive Toast Alert */}
       {toast && (
         <div 
           id="global-toast-alert"
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl animate-in slide-in-from-bottom-5 duration-300 max-w-md"
+          className="fixed bottom-20 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl animate-in slide-in-from-bottom-5 duration-300 max-w-md"
         >
           {toast.type === 'success' && (
             <div className="p-1.5 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 shrink-0">

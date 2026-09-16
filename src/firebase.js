@@ -74,8 +74,26 @@ const DEFAULT_HERO = {
   statsSatisfaction: "4.9/5 Average Rating"
 };
 
-// Initial Blank Defaults (Zero Mock Data)
-const DEFAULT_SERVICES = [];
+// Initial Defaults (Zero mock transactions, Zero mock messages, plus Satyam Singh Website Post)
+const DEFAULT_SERVICES = [
+  {
+    id: "srv-satyam-website-20k",
+    title: "Satyam Singh • App Builder & Website Builder (1 Website Ka ₹20,000)",
+    providerName: "Satyam Singh",
+    providerAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    category: "Tech & Coding",
+    price: 20000,
+    rating: 5.0,
+    reviewCount: 1,
+    duration: "5-7 Days",
+    location: "Online / Pan-India",
+    description: "Full-stack application and custom responsive website development. Includes complete design, mobile responsiveness, Razorpay payments, SEO, and cloud deployment. 1 website flat ₹20,000. Chat on WhatsApp: 7091472879.",
+    skills: ["React", "Full-Stack Web", "Mobile Responsive", "Razorpay", "Tailwind CSS"],
+    isFeatured: true,
+    availableForSwap: false,
+    whatsappNumber: "7091472879"
+  }
+];
 const DEFAULT_TRANSACTIONS = [];
 const DEFAULT_MESSAGES = [];
 
@@ -92,7 +110,7 @@ function getLocalItem(key, fallback = []) {
     
     // Ensure any previously stored mock/sample seed items are wiped clean
     if (Array.isArray(parsed)) {
-      const sanitized = parsed.filter(item => {
+      let sanitized = parsed.filter(item => {
         if (!item) return false;
         const id = String(item.id || '');
         if (
@@ -106,9 +124,15 @@ function getLocalItem(key, fallback = []) {
         return true;
       });
 
-      if (sanitized.length !== parsed.length) {
-        localStorage.setItem(key, JSON.stringify(sanitized));
+      // If services list, ensure Satyam Singh post is present
+      if (key === 'skillswap_services_v3') {
+        const hasSatyam = sanitized.some(s => s.id === 'srv-satyam-website-20k');
+        if (!hasSatyam) {
+          sanitized = [...DEFAULT_SERVICES, ...sanitized];
+        }
       }
+
+      localStorage.setItem(key, JSON.stringify(sanitized));
       return sanitized;
     }
 

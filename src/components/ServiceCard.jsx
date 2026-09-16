@@ -9,7 +9,8 @@ import {
   CheckCircle, 
   MessageSquare,
   Flame,
-  ArrowUpRight
+  ArrowUpRight,
+  MessageCircle
 } from 'lucide-react';
 
 export default function ServiceCard({ service, onBook, onPromote, onContact }) {
@@ -28,7 +29,8 @@ export default function ServiceCard({ service, onBook, onPromote, onContact }) {
     skills = [],
     isFeatured = false,
     availableForSwap = false,
-    swapPreference = ""
+    swapPreference = "",
+    whatsappNumber = ""
   } = service;
 
   // 10% commission calculations
@@ -155,28 +157,43 @@ export default function ServiceCard({ service, onBook, onPromote, onContact }) {
         </div>
 
         {/* Action Button Grid */}
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        <div className={`grid ${whatsappNumber ? 'grid-cols-3' : 'grid-cols-2'} gap-2 pt-1`}>
           
           {/* Direct Message / Contact */}
           <button
             id={`service-contact-${id}`}
             type="button"
             onClick={() => onContact && onContact(service)}
-            className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors"
+            className="flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors"
           >
             <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
-            <span>Chat / Swap</span>
+            <span>Chat</span>
           </button>
+
+          {/* WhatsApp Direct */}
+          {whatsappNumber && (
+            <a
+              id={`service-whatsapp-${id}`}
+              href={`https://wa.me/91${whatsappNumber}?text=${encodeURIComponent(`Hi ${providerName}, I am interested in your service "${title}". Can we chat?`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+              title={`WhatsApp ${whatsappNumber}`}
+            >
+              <MessageCircle className="w-3.5 h-3.5 fill-white text-emerald-600" />
+              <span>WhatsApp</span>
+            </a>
+          )}
 
           {/* Book with Razorpay */}
           <button
             id={`service-book-${id}`}
             type="button"
             onClick={() => onBook && onBook(service)}
-            className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold shadow-md shadow-orange-600/20 transition-all hover:scale-[1.02]"
+            className="flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold shadow-md shadow-orange-600/20 transition-all hover:scale-[1.02]"
           >
             <CreditCard className="w-3.5 h-3.5" />
-            <span>Book Now</span>
+            <span>Book</span>
           </button>
         </div>
 

@@ -8,7 +8,8 @@ import {
   ShieldCheck, 
   MapPin, 
   DollarSign, 
-  HelpCircle 
+  HelpCircle,
+  MessageCircle 
 } from 'lucide-react';
 import { sendMessage } from '../firebase.js';
 
@@ -330,19 +331,36 @@ export default function ContactForm({ prefilledService, showToast }) {
                     />
                   </div>
 
-                  {/* Submit Button */}
-                  <button
-                    id="submit-contact-button"
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold text-sm shadow-md shadow-orange-500/20 transition-all hover:scale-[1.01] disabled:opacity-50"
-                  >
-                    <Send className="w-4 h-4" />
-                    <span>{submitting ? "Broadcasting to Live Firestore..." : "Send Request & Sync Live"}</span>
-                  </button>
+                  {/* Submit & WhatsApp Buttons */}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <button
+                      id="submit-contact-button"
+                      type="submit"
+                      disabled={submitting}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-500/20 transition-all hover:scale-[1.01] disabled:opacity-50"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>{submitting ? "Broadcasting to Live Firestore..." : "Send Request & Sync Live"}</span>
+                    </button>
+
+                    <a
+                      id="contact-whatsapp-direct-btn"
+                      href={`https://wa.me/917091472879?text=${encodeURIComponent(
+                        formData.message.trim() 
+                          ? `[Service / Task Inquiry from ${formData.name || 'Visitor'}]\nCategory: ${formData.category}\nBudget: ${formData.budget || 'Open'}\nMessage: ${formData.message}`
+                          : 'Hello, I want to discuss a service or task inquiry on WhatsApp.'
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01]"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                      <span>Chat on WhatsApp (7091472879)</span>
+                    </a>
+                  </div>
 
                   <p className="text-[10px] text-center text-slate-400 dark:text-slate-500">
-                    🔒 Messages are saved in Firestore and instantly visible to administrators.
+                    🔒 Messages are saved in Firestore and instantly visible to administrators. WhatsApp connects directly to 7091472879.
                   </p>
 
                 </form>

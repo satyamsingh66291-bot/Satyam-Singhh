@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Sparkles, 
   Flame, 
@@ -13,7 +14,9 @@ import {
   HelpCircle,
   Zap,
   TrendingUp,
-  MapPin
+  MapPin,
+  Laptop,
+  Code2
 } from 'lucide-react';
 import Hero from '../components/Hero.jsx';
 import ServiceCard from '../components/ServiceCard.jsx';
