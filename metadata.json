@@ -1,0 +1,6 @@
+{
+  "name": "SkillSwap & HyperLocal Micro-Services Hub",
+  "description": "Dynamic local service and skill-exchange platform featuring Razorpay payments, automated 10% commission engine, real-time messaging, and live CMS admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
