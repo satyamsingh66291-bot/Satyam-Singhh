@@ -29,7 +29,7 @@ const firebaseConfig = {
   storageBucket: appletConfig?.storageBucket || import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: appletConfig?.messagingSenderId || import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: appletConfig?.appId || import.meta.env.VITE_FIREBASE_APP_ID,
-  firestoreDatabaseId: appletConfig?.firestoreDatabaseId
+  firestoreDatabaseId: appletConfig?.firestoreDatabaseId || import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID
 };
 
 // Check if actual valid project ID is configured
