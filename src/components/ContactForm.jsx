@@ -27,6 +27,7 @@ export default function ContactForm({ prefilledService, showToast }) {
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [lastWaUrl, setLastWaUrl] = useState('');
 
   useEffect(() => {
     if (prefilledService) {
@@ -75,9 +76,30 @@ export default function ContactForm({ prefilledService, showToast }) {
 
       await sendMessage(payload);
 
+      const waMessage = `*New Task / Service Request*
+👤 Name: ${payload.name}
+📞 Phone: ${payload.phone}
+✉️ Email: ${payload.email}
+📍 Location: ${payload.location}
+🏷️ Category: ${payload.category}
+📌 Request Type: ${payload.requestType}
+💰 Budget: ${payload.budget}
+📝 Details:
+${payload.message}`;
+
+      const waUrl = `https://wa.me/919007355062?text=${encodeURIComponent(waMessage)}`;
+      setLastWaUrl(waUrl);
+
+      // Directly open pre-filled WhatsApp chat to 9007355062
+      try {
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
+      } catch (e) {
+        console.warn('WhatsApp auto-open popup blocked:', e);
+      }
+
       setSubmitted(true);
       if (showToast) {
-        showToast("Message Sent Successfully! Synced real-time to Admin.", "success");
+        showToast("Task Request Saved to Firestore & WhatsApp Opened!", "success");
       }
 
       // Reset form after short delay
@@ -93,7 +115,7 @@ export default function ContactForm({ prefilledService, showToast }) {
           message: ''
         });
         setSubmitted(false);
-      }, 3500);
+      }, 6000);
 
     } catch (err) {
       console.error("Message send error:", err);
@@ -176,11 +198,24 @@ export default function ContactForm({ prefilledService, showToast }) {
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <h3 className="text-2xl font-extrabold text-slate-900 dark:text-white">
-                    Message Sent Successfully!
+                    Task Request Sent & Synced to Firestore!
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto">
-                    Your message has been broadcast live to the Admin Message Center and matched service providers. Check back shortly!
+                    Your request has been broadcast live to Firestore and the Admin Message Center. We have also prepared your WhatsApp message for 9007355062.
                   </p>
+                  {lastWaUrl && (
+                    <div className="pt-2 flex justify-center">
+                      <a
+                        href={lastWaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+                      >
+                        <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                        <span>Open Pre-filled WhatsApp Chat (9007355062)</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <form id="contact-inquiry-form" onSubmit={handleSubmit} className="space-y-4 text-xs">
@@ -345,22 +380,22 @@ export default function ContactForm({ prefilledService, showToast }) {
 
                     <a
                       id="contact-whatsapp-direct-btn"
-                      href={`https://wa.me/917091472879?text=${encodeURIComponent(
-                        formData.message.trim() 
-                          ? `[Service / Task Inquiry from ${formData.name || 'Visitor'}]\nCategory: ${formData.category}\nBudget: ${formData.budget || 'Open'}\nMessage: ${formData.message}`
-                          : 'Hello, I want to discuss a service or task inquiry on WhatsApp.'
+                      href={`https://wa.me/919007355062?text=${encodeURIComponent(
+                        formData.name.trim() || formData.message.trim()
+                          ? `*New Task / Service Request*\n👤 Name: ${formData.name || 'Visitor'}\n📞 Phone: ${formData.phone || 'Not specified'}\n✉️ Email: ${formData.email || 'Not specified'}\n📍 Location: ${formData.location || 'Local area'}\n🏷️ Category: ${formData.category}\n📌 Type: ${formData.requestType}\n💰 Budget: ${formData.budget || 'Negotiable'}\n📝 Task Details:\n${formData.message || 'Hello, I want to discuss a service or task request.'}`
+                          : 'Hello Satyam, I want to discuss a custom service or task request with you on WhatsApp.'
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="shrink-0 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01]"
                     >
                       <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
-                      <span>Chat on WhatsApp (7091472879)</span>
+                      <span>Chat on WhatsApp (9007355062)</span>
                     </a>
                   </div>
 
                   <p className="text-[10px] text-center text-slate-400 dark:text-slate-500">
-                    🔒 Messages are saved in Firestore and instantly visible to administrators. WhatsApp connects directly to 7091472879.
+                    🔒 Messages are saved in Firestore and instantly visible to administrators. WhatsApp connects directly to 9007355062.
                   </p>
 
                 </form>

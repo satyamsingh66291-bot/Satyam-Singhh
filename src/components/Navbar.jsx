@@ -72,7 +72,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
               <MessageCircle className="w-3.5 h-3.5 fill-current text-emerald-500 dark:text-emerald-400" />
               <span>WhatsApp Chat</span>
               <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-emerald-600 text-white font-mono">
-                7091472879
+                9007355062
               </span>
             </Link>
             <a
@@ -176,7 +176,7 @@ export default function Navbar({ darkMode, setDarkMode }) {
               <span>Direct WhatsApp Chat</span>
             </div>
             <span className="text-xs bg-emerald-600 text-white px-2.5 py-1 rounded-full font-mono font-bold">
-              7091472879
+              9007355062
             </span>
           </Link>
           <a

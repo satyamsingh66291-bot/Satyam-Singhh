@@ -10,7 +10,8 @@ import {
   Lock, 
   Tag, 
   Receipt,
-  RotateCcw
+  RotateCcw,
+  MessageCircle
 } from 'lucide-react';
 import { logTransaction, toggleFeaturedService } from '../firebase.js';
 
@@ -46,12 +47,14 @@ export default function PaymentModal({
   const [step, setStep] = useState('FORM');
   const [transactionResult, setTransactionResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [bookingWaUrl, setBookingWaUrl] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setStep('FORM');
       setTransactionResult(null);
       setErrorMessage('');
+      setBookingWaUrl('');
       loadRazorpayScript().then((ready) => {
         setRazorpayReady(ready);
       });
@@ -67,6 +70,21 @@ export default function PaymentModal({
   // 10% Automated Commission Engine
   const platformCommission = isFeaturedPurchase ? amount : Math.round(amount * 0.10 * 100) / 100;
   const providerPayout = isFeaturedPurchase ? 0 : Math.round(amount * 0.90 * 100) / 100;
+
+  const generateWhatsAppUrl = (tx) => {
+    const msg = `*New Service Booking Order*
+🛠️ Service: ${tx.serviceTitle}
+💵 Total Amount: ₹${tx.totalAmount.toLocaleString()}
+🏷️ Category: ${targetService?.category || 'Service Booking'}
+👤 Customer Name: ${tx.customerName || 'Customer'}
+📞 Phone: ${tx.customerPhone || 'Not specified'}
+✉️ Email: ${tx.customerEmail || 'Not specified'}
+🧾 Order / Tx ID: ${tx.transactionId}
+⚡ Status: Confirmed & Synced to Firestore
+
+Hi Satyam, I have booked this service. Please confirm timeline and project requirements!`;
+    return `https://wa.me/919007355062?text=${encodeURIComponent(msg)}`;
+  };
 
   const executeSuccessfulTransaction = async (paymentId) => {
     setLoading(true);
@@ -93,13 +111,24 @@ export default function PaymentModal({
         await toggleFeaturedService(targetService.id, true);
       }
 
+      // Generate pre-filled WhatsApp link
+      const waUrl = generateWhatsAppUrl(txPayload);
+      setBookingWaUrl(waUrl);
+
+      // Directly open pre-filled WhatsApp chat to 9007355062
+      try {
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
+      } catch (e) {
+        console.warn('Could not auto open WhatsApp:', e);
+      }
+
       setTransactionResult(result);
       setStep('SUCCESS');
       if (showToast) {
         showToast(
           isFeaturedPurchase
             ? 'Featured Badge activated! Service highlighted at top.'
-            : 'Payment Successful! Booking confirmed & commission recorded.',
+            : 'Booking Confirmed & WhatsApp opened for 9007355062!',
           'success'
         );
       }
@@ -111,6 +140,14 @@ export default function PaymentModal({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleWhatsAppBooking = async () => {
+    if (!customerName.trim() || !customerPhone.trim()) {
+      if (showToast) showToast('Please enter your Name and Phone (WhatsApp) number first.', 'error');
+      return;
+    }
+    await executeSuccessfulTransaction(`wa_order_${Date.now().toString().slice(-6)}`);
   };
 
   const handleRazorpayCheckout = async () => {
@@ -320,6 +357,17 @@ export default function PaymentModal({
                 </span>
               </button>
 
+              <button
+                id="book-whatsapp-direct-button"
+                type="button"
+                disabled={loading}
+                onClick={handleWhatsAppBooking}
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01] disabled:opacity-50"
+              >
+                <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                <span>Book & Chat on WhatsApp (9007355062)</span>
+              </button>
+
               {/* Interactive Test Simulator Sandbox Bar */}
               <div className="p-3 rounded-xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 space-y-2">
                 <div className="flex items-center justify-between text-[11px] text-amber-800 dark:text-amber-300 font-semibold">
@@ -418,7 +466,20 @@ export default function PaymentModal({
               </div>
             )}
 
-            <div className="flex gap-3">
+            <div className="space-y-2.5">
+              {bookingWaUrl && (
+                <a
+                  id="success-whatsapp-open-btn"
+                  href={bookingWaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                  <span>Open Booking Details on WhatsApp (9007355062)</span>
+                </a>
+              )}
+
               <button
                 type="button"
                 onClick={onClose}

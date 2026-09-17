@@ -201,13 +201,13 @@ export default function SatyamSinghBuilder({ showToast }) {
                 </button>
 
                 <a
-                  href="https://wa.me/917091472879?text=Hi%20Satyam%2C%20I%20am%20interested%20in%20your%201%20Website%20Ka%20%E2%82%B920%2C000%20package."
+                  href="https://wa.me/919007355062?text=Hi%20Satyam%2C%20I%20am%20interested%20in%20your%201%20Website%20Ka%20%E2%82%B920%2C000%20package."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-5 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2"
                 >
                   <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
-                  <span>Chat on WhatsApp (7091472879)</span>
+                  <span>Chat on WhatsApp (9007355062)</span>
                 </a>
 
                 <a

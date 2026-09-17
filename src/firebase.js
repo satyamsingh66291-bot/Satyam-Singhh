@@ -9,7 +9,9 @@ import {
   collection, 
   addDoc, 
   getDocs, 
+  getDocFromServer,
   doc, 
+  setDoc,
   updateDoc, 
   deleteDoc, 
   onSnapshot, 
@@ -18,21 +20,23 @@ import {
   orderBy 
 } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import appletConfig from '../firebase-applet-config.json';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDummyTestKeyForAppletMode12345",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "skillswap-hub.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "skillswap-hub",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "skillswap-hub.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1234567890",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1234567890:web:abcdef123456"
+  apiKey: appletConfig?.apiKey || import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: appletConfig?.authDomain || import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: appletConfig?.projectId || import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: appletConfig?.storageBucket || import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: appletConfig?.messagingSenderId || import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: appletConfig?.appId || import.meta.env.VITE_FIREBASE_APP_ID,
+  firestoreDatabaseId: appletConfig?.firestoreDatabaseId
 };
 
 // Check if actual valid project ID is configured
 const hasLiveConfig = Boolean(
-  import.meta.env.VITE_FIREBASE_API_KEY && 
-  import.meta.env.VITE_FIREBASE_PROJECT_ID &&
-  !import.meta.env.VITE_FIREBASE_PROJECT_ID.includes('placeholder')
+  firebaseConfig.apiKey && 
+  firebaseConfig.projectId &&
+  !firebaseConfig.projectId.includes('placeholder')
 );
 
 let app;
@@ -41,11 +45,35 @@ let auth = null;
 
 try {
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app);
+  db = firebaseConfig.firestoreDatabaseId 
+    ? getFirestore(app, firebaseConfig.firestoreDatabaseId) 
+    : getFirestore(app);
   auth = getAuth(app);
+  console.log("🔥 Firebase initialized successfully with Firestore DB:", firebaseConfig.firestoreDatabaseId || "(default)");
 } catch (err) {
   console.warn("Firebase initialized with local fallback engine:", err?.message);
 }
+
+// Test live connection
+async function testFirestoreConnection() {
+  if (hasLiveConfig && db) {
+    try {
+      await getDocFromServer(doc(db, 'test', 'connection'));
+      console.log("✅ Cloud Firestore connection confirmed live!");
+    } catch (e) {
+      console.info("Firestore status ready:", e?.message);
+    }
+
+    // Seed default Satyam Singh website service to live Cloud Firestore if not present
+    try {
+      const srvRef = doc(db, 'services', 'srv-satyam-website-20k');
+      await setDoc(srvRef, DEFAULT_SERVICES[0], { merge: true });
+    } catch (e) {
+      console.warn("Could not seed initial service to Cloud Firestore:", e?.message);
+    }
+  }
+}
+testFirestoreConnection();
 
 export { db, auth };
 
@@ -87,11 +115,11 @@ const DEFAULT_SERVICES = [
     reviewCount: 1,
     duration: "5-7 Days",
     location: "Online / Pan-India",
-    description: "Full-stack application and custom responsive website development. Includes complete design, mobile responsiveness, Razorpay payments, SEO, and cloud deployment. 1 website flat ₹20,000. Chat on WhatsApp: 7091472879.",
+    description: "Full-stack application and custom responsive website development. Includes complete design, mobile responsiveness, Razorpay payments, SEO, and cloud deployment. 1 website flat ₹20,000. Chat on WhatsApp: 9007355062.",
     skills: ["React", "Full-Stack Web", "Mobile Responsive", "Razorpay", "Tailwind CSS"],
     isFeatured: true,
     availableForSwap: false,
-    whatsappNumber: "7091472879"
+    whatsappNumber: "9007355062"
   }
 ];
 const DEFAULT_TRANSACTIONS = [];
@@ -393,7 +421,7 @@ export async function updateHeroSettings(newSettings) {
   if (hasLiveConfig && db) {
     try {
       const heroDoc = doc(db, 'settings', 'hero');
-      await updateDoc(heroDoc, newSettings);
+      await setDoc(heroDoc, newSettings, { merge: true });
       return true;
     } catch (err) {
       console.warn("Firestore update hero error, falling back to local:", err);
@@ -458,7 +486,7 @@ export async function saveService(serviceData) {
   if (hasLiveConfig && db) {
     try {
       const srvRef = doc(db, 'services', id);
-      await updateDoc(srvRef, formatted);
+      await setDoc(srvRef, formatted, { merge: true });
       return { success: true, service: formatted };
     } catch (e) {
       console.warn("Live save error, local fallback:", e);
@@ -494,6 +522,14 @@ export async function deleteService(serviceId) {
 }
 
 export async function toggleFeaturedService(serviceId, isFeatured = true) {
+  if (hasLiveConfig && db) {
+    try {
+      await setDoc(doc(db, 'services', serviceId), { isFeatured }, { merge: true });
+    } catch (e) {
+      console.warn("Live toggle featured error:", e);
+    }
+  }
+
   const current = getLocalItem(STORAGE_KEYS.SERVICES, DEFAULT_SERVICES);
   const updated = current.map(s => s.id === serviceId ? { ...s, isFeatured } : s);
   setLocalItem(STORAGE_KEYS.SERVICES, updated);

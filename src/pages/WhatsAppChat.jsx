@@ -17,9 +17,9 @@ import {
 } from 'lucide-react';
 
 export default function WhatsAppChat({ showToast }) {
-  const phoneNumber = '7091472879';
-  const internationalNumber = '+91 7091472879';
-  const rawWaNumber = '917091472879';
+  const phoneNumber = '9007355062';
+  const internationalNumber = '+91 9007355062';
+  const rawWaNumber = '919007355062';
 
   const [messageText, setMessageText] = useState(
     'Hello, I visited your platform and want to discuss a project / service with you.'
@@ -49,7 +49,7 @@ export default function WhatsAppChat({ showToast }) {
   const handleCopyNumber = () => {
     navigator.clipboard.writeText(phoneNumber);
     setCopied(true);
-    if (showToast) showToast('Phone number 7091472879 copied to clipboard!', 'success');
+    if (showToast) showToast('Phone number 9007355062 copied to clipboard!', 'success');
     setTimeout(() => setCopied(false), 2500);
   };
 
@@ -119,7 +119,7 @@ export default function WhatsAppChat({ showToast }) {
                   type="button"
                   onClick={handleCopyNumber}
                   className="px-3.5 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white text-xs font-bold backdrop-blur-sm border border-white/20 flex items-center gap-1.5 transition-all"
-                  title="Copy 7091472879"
+                  title="Copy 9007355062"
                 >
                   {copied ? (
                     <>
@@ -186,7 +186,7 @@ export default function WhatsAppChat({ showToast }) {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Your Message to <span className="text-emerald-600 dark:text-emerald-400 font-bold">+91 7091472879</span>:
+                  Your Message to <span className="text-emerald-600 dark:text-emerald-400 font-bold">+91 9007355062</span>:
                 </label>
                 <span className="text-[11px] text-slate-400">
                   Will open in your WhatsApp app or WhatsApp Web
@@ -222,7 +222,7 @@ export default function WhatsAppChat({ showToast }) {
                   className="py-4 px-5 rounded-2xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
                 >
                   {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                  <span>{copied ? 'Copied 7091472879' : 'Copy 7091472879'}</span>
+                  <span>{copied ? 'Copied 9007355062' : 'Copy 9007355062'}</span>
                 </button>
               </div>
             </div>

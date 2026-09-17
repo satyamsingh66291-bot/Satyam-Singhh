@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Services collection: public read, write for creating or managing services
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isValidId(serviceId);
+    }
+
+    // Messages collection: public inquiry and task submissions
+    match /messages/{messageId} {
+      allow read: if true;
+      allow create: if isValidId(messageId);
+      allow update, delete: if isValidId(messageId);
+    }
+
+    // Transactions collection: booking logs & payment receipts
+    match /transactions/{transactionId} {
+      allow read: if true;
+      allow create: if isValidId(transactionId);
+      allow update: if isValidId(transactionId);
+    }
+
+    // Global settings: hero headline, platform config
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isValidId(settingId);
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

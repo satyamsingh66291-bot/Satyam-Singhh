@@ -8,8 +8,8 @@ export default function WhatsAppFloatingButton({ showToast }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const phoneNumber = '7091472879';
-  const rawWaNumber = '917091472879';
+  const phoneNumber = '9007355062';
+  const rawWaNumber = '919007355062';
 
   // Do not show floating button if already on the /whatsapp full chat page
   if (location.pathname === '/whatsapp' || location.pathname === '/chat') {
@@ -42,7 +42,7 @@ export default function WhatsAppFloatingButton({ showToast }) {
               </div>
               <div>
                 <h4 className="text-sm font-bold leading-tight">WhatsApp Direct</h4>
-                <p className="text-[11px] text-emerald-100">+91 7091472879 • Online</p>
+                <p className="text-[11px] text-emerald-100">+91 9007355062 • Online</p>
               </div>
             </div>
             <button
@@ -140,7 +140,7 @@ export default function WhatsAppFloatingButton({ showToast }) {
         </div>
         <div className="flex flex-col items-start pr-1 text-left">
           <span className="text-[10px] font-medium leading-none text-emerald-100">WhatsApp</span>
-          <span className="text-xs font-bold leading-tight">7091472879</span>
+          <span className="text-xs font-bold leading-tight">9007355062</span>
         </div>
       </button>
 

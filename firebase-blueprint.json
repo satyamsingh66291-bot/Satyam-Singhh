@@ -1,0 +1,93 @@
+{
+  "entities": {
+    "Service": {
+      "title": "Service",
+      "description": "Hyper-local service or skill listing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "providerName": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "duration": { "type": "string" },
+        "location": { "type": "string" },
+        "description": { "type": "string" },
+        "skills": { "type": "array" },
+        "isFeatured": { "type": "boolean" },
+        "availableForSwap": { "type": "boolean" },
+        "swapPreference": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category", "price", "location"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Contact or task request message",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "location": { "type": "string" },
+        "category": { "type": "string" },
+        "requestType": { "type": "string" },
+        "budget": { "type": "string" },
+        "message": { "type": "string" },
+        "serviceTitle": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "phone", "message"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Order or booking payment transaction",
+      "type": "object",
+      "properties": {
+        "transactionId": { "type": "string" },
+        "serviceId": { "type": "string" },
+        "serviceTitle": { "type": "string" },
+        "totalAmount": { "type": "number" },
+        "platformCommission": { "type": "number" },
+        "providerPayout": { "type": "number" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["transactionId", "serviceTitle", "totalAmount"]
+    },
+    "HeroSettings": {
+      "title": "HeroSettings",
+      "description": "Platform hero headline and subtext configurations",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/services/{serviceId}": {
+      "schema": { "$ref": "#/entities/Service" },
+      "description": "Services published by providers"
+    },
+    "/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/Message" },
+      "description": "Inbound service inquiries and gig requests"
+    },
+    "/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Booking orders and payment transactions"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/HeroSettings" },
+      "description": "Global application UI settings"
+    }
+  }
+}

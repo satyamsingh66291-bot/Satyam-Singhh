@@ -30,8 +30,18 @@ export default function ServiceCard({ service, onBook, onPromote, onContact }) {
     isFeatured = false,
     availableForSwap = false,
     swapPreference = "",
-    whatsappNumber = ""
+    whatsappNumber = "9007355062"
   } = service;
+
+  const activeWhatsApp = whatsappNumber || '9007355062';
+  const prefilledWhatsAppText = `Hi ${providerName || 'Pro'}, I want to book / inquire about your service:
+*${title}*
+Price: ₹${price.toLocaleString()}
+Category: ${category}
+Duration: ${duration}
+Location: ${location}
+
+Can we discuss and proceed with this booking?`;
 
   // 10% commission calculations
   const platformFee = Math.round(price * 0.10);
@@ -157,7 +167,7 @@ export default function ServiceCard({ service, onBook, onPromote, onContact }) {
         </div>
 
         {/* Action Button Grid */}
-        <div className={`grid ${whatsappNumber ? 'grid-cols-3' : 'grid-cols-2'} gap-2 pt-1`}>
+        <div className="grid grid-cols-3 gap-2 pt-1">
           
           {/* Direct Message / Contact */}
           <button
@@ -171,19 +181,17 @@ export default function ServiceCard({ service, onBook, onPromote, onContact }) {
           </button>
 
           {/* WhatsApp Direct */}
-          {whatsappNumber && (
-            <a
-              id={`service-whatsapp-${id}`}
-              href={`https://wa.me/91${whatsappNumber}?text=${encodeURIComponent(`Hi ${providerName}, I am interested in your service "${title}". Can we chat?`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
-              title={`WhatsApp ${whatsappNumber}`}
-            >
-              <MessageCircle className="w-3.5 h-3.5 fill-white text-emerald-600" />
-              <span>WhatsApp</span>
-            </a>
-          )}
+          <a
+            id={`service-whatsapp-${id}`}
+            href={`https://wa.me/91${activeWhatsApp}?text=${encodeURIComponent(prefilledWhatsAppText)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+            title={`WhatsApp ${activeWhatsApp}`}
+          >
+            <MessageCircle className="w-3.5 h-3.5 fill-white text-emerald-600" />
+            <span>WhatsApp</span>
+          </a>
 
           {/* Book with Razorpay */}
           <button
